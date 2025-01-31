@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'providers/cocktail_provider.dart';
+import 'screens/home.dart';
+import 'screens/details.dart';
+import 'screens/favorites.dart';
+import 'models/cocktail.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CocktailProvider()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -11,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'MYOB - Make Your Own Booze',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -28,10 +41,17 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => Home(),
+        '/details': (context) => DetailsScreen(
+              cocktail: ModalRoute.of(context)!.settings.arguments as Cocktail,
+            ),
+        '/favorites': (context) => FavoritesScreen(),
+      },
     );
   }
 }
